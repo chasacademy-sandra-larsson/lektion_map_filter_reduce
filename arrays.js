@@ -69,13 +69,43 @@ console.log(filteredTweet)
   
   console.log(authors1800th)
  
-   // 6. Anvvänd Array.protoype.sort() för att skapa en aarray som innehåller författarna sorterade i bokstavsordning (stigande ordning) efter efternamn
+   // 6. Anvvänd Array.protoyype.sort() för att skapa en array som innehåller författarna sorterade i bokstavsordning (stigande ordning) efter efternamn
 
+    function compareFn(a, b) {
+      const nameA = a.last.toUpperCase();
+      const nameB = b.last.toUpperCase();
+      if(nameA < nameB) {
+        return -1;
+      } 
+      if(nameA > nameB) {
+        return 1;
+      }
+      return 0; //om samma
+    }
 
+  const sortedByLastName = realAuthors.sort(compareFn);
+    //const sortedByLastName = realAuthors.sort((a, b) => a.last.toLowerCase() === b.last.toLowerCase() ? 0 : a.last.toLowerCase() > b.last.toLowerCase() ? -1 : 1);
+    console.log(sortedByLastName);
+
+    // Utan comparison-funktion så kan vi bara sortera enkla arrayer
+    // const letters = ["c", "b", "q"];
+    // const nums = [10, 1, 3]; // görs om till strängar
+    // console.log(letters.sort());
+    // console.log(nums.sort());
   
-   // 7. Använd Array.protoype.sort() för att skapa en aarray som innehåller författarna sorterade i fallande ordning efter hur många år de levde
+   // 7. Använd Array.protoype.sort() för att skapa en array som innehåller författarna sorterade i fallande ordning efter hur många år de levde
 
+   function compareFnYears(a, b) {
+   
+     if((a.passed - a.year) > (b.passed - b.year)) 
+        return -1;
+      if((a.passed - a.year) < (b.passed - b.year))
+       return 1;
+      return 0;
+   }
 
+   const sortedByYears = realAuthors.sort(compareFnYears);
+   console.log(sortedByYears);
 
   // 8. Använd Array.protype.reduce() för att skapa en array som innehåller författarnas totala ålder
 
@@ -84,14 +114,14 @@ console.log(filteredTweet)
 //     sum += i;
 //   }
 
-//   const totalAge = realAuthors.reduce(function(accumulator, author) {
-//     return accumulator + (author.passed - author.year);
-//   }, 0);
+  // const totalAge = realAuthors.reduce(function(accumulator, author) {
+  //   return accumulator + (author.passed - author.year);
+  // }, 0);
 
  // VG-nivå
-  const totalAge = realAuthors.reduce((accumulator, author) => accumulator + (author.passed - author.year), 0);
+  const totalAge = realAuthors.reduce((acc, author) => acc + (author.passed - author.year), 0);
 
-  console.log(totalAge);
+ console.log(totalAge);
 
   //------------------ny data att jobba med - players -------------------  //
 
@@ -105,17 +135,39 @@ console.log(filteredTweet)
 
 
   // 9. Använd Array.prototype.some() för att ta reda på om någon spelare är äldre än 35 år?
-
+  const currentYear = new Date().getFullYear();
+  const isOver35 = players.some(player => (currentYear - player.year) > 35);
+  console.log(isOver35);
 
 
   // 10. Använd Array.prototype.every()  för att ta reda på om alla spelare är äldre än 20 år?
-
+  const isOver20 = players.every(player => (currentYear - player.year) > 20);
+  console.log(isOver20);
 
 
   // 11. Använd Array.prototype.map() och Array.prototype.split() för att göra om 'name' så att den innehåller 'förnamn efternamn' i stället för nuvarande "efternamn, förnamn"
-
-
+  const newNameFormat = players.map(player => {
+    const [last, first] = player.name.split(",");
+    return `${first} ${last}`
+  });
+  console.log(newNameFormat);
   
+  // [Modric, Luka] = "Modric, Luka".split(",")
+  // Mladen
+  const formatNames = players.map(player => {
+   
+    const [lastName, firstName] = player.name.split(', ');
+  
+    return {
+      name: `${firstName} ${lastName}`,  
+      year: player.year
+    };
+  });
+
+  // Henrik
+  const henrikNames = players.map(player => `${player.name.split(',')[1]} ${player.name.split(',')[0]}`);
+  console.log(henrikNames);
+
   //------------------och en sista -------------------  //
 
    // Bonus! 
@@ -123,5 +175,6 @@ console.log(filteredTweet)
    // 12. Använd Array.prototype.reduce() samt Array.prototype.includes() för att skapa en array som innehåller endast unika värden från arrayen products.
    // Lite annan variant av reduce() - istället för att börja på accumalatorn på 0, börja på en tom array och pusha in värden i den!
 
+   const products = ['jewellery', 'trousers', 'jewellery', 'shoes', 'jewellery', 't-shirt', 'polos', 't-shirt', 't-shirt']
 
    // Den unika arrayen ska alltå se ut så här: ['t-shirt', 'trousers', 'polos', 'shoes', 'jewellery']
